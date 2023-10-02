@@ -6,7 +6,9 @@ import FeedbackOptions from "./FeedbackOptions/FeedbackOptions";
 import Section from "./Section/Section";
 import Notification from "./Notification/Notification";
 
-const feedbackTitles = ["good", "neutral", "bad"];
+import { Options } from "../types/types";
+
+const feedbackTitles: Array<keyof typeof Options> = ["good", "neutral", "bad"];
 
 export default function App() {
 	const [good, setGood] = useState(0);
@@ -17,24 +19,24 @@ export default function App() {
 		return good + neutral + bad;
 	};
 
-	const countPositiveFeedbackPercentage = () => {
+	const countPositiveFeedbackPercentage = (): number => {
 		const FeedbackPercentage = (good / countTotalFeedback()) * 100;
 		return Math.round(FeedbackPercentage);
 	};
 
-	const onControlClick = title => {
+	const onControlClick = (title: keyof typeof Options): void => {
 		Notify.info("Thank for your feedback!");
 
 		switch (title) {
-			case "good":
+			case Options.good:
 				setGood(prev => prev + 1);
 				break;
 
-			case "neutral":
+			case Options.neutral:
 				setNeutral(prev => prev + 1);
 				break;
 
-			case "bad":
+			case Options.bad:
 				setBad(prev => prev + 1);
 				break;
 
@@ -49,13 +51,7 @@ export default function App() {
 				<FeedbackOptions options={feedbackTitles} onLeaveFeedback={onControlClick} />
 
 				{countTotalFeedback() ? (
-					<Statistics
-						good={good}
-						neutral={neutral}
-						bad={bad}
-						total={countTotalFeedback()}
-						positivePercentage={countPositiveFeedbackPercentage()}
-					/>
+					<Statistics good={good} neutral={neutral} bad={bad} total={countTotalFeedback()} positivePercentage={countPositiveFeedbackPercentage()} />
 				) : (
 					<Notification message="There is no feedback!" />
 				)}
